@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Palpites</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        button.gerar-palpites {
+            padding: 12px 24px;
+            font-size: 16px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+        button.gerar-palpites:hover {
+            background-color: #218838;
+        }
+        #palpitesContainer {
+            width: 90%;
+            max-width: 600px;
+            background-color: white;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .palpite {
+            padding: 6px 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+            text-align: center;
+        }
+        .palpite:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        @media (max-width: 600px) {
+            #palpitesContainer {
+                width: 95%;
+                max-height: calc(100vh - 80px);
+                padding: 8px;
+            }
+            .palpite {
+                font-size: 12px;
+                padding: 5px 8px;
+            }
+            button.gerar-palpites {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="gerar-palpites" onclick="gerarPalpites()">Gerar Palpites</button>
+    <div id="palpitesContainer"></div>
+
+    <script>
+        const tabelaBichos = [
+            { grupo: 1, nome: "AVESTRUZ", emoji: "🦒", dezenas: ["01", "02", "03", "04"] },
+            { grupo: 2, nome: "ÁGUIA", emoji: "🦅", dezenas: ["05", "06", "07", "08"] },
+            { grupo: 3, nome: "BURRO", emoji: "🫏", dezenas: ["09", "10", "11", "12"] },
+            { grupo: 4, nome: "BORBOLETA", emoji: "🦋", dezenas: ["13", "14", "15", "16"] },
+            { grupo: 5, nome: "CACHORRO", emoji: "🐶", dezenas: ["17", "18", "19", "20"] },
+            { grupo: 6, nome: "CABRA", emoji: "🐐", dezenas: ["21", "22", "23", "24"] },
+            { grupo: 7, nome: "CARNEIRO", emoji: "🐑", dezenas: ["25", "26", "27", "28"] },
+            { grupo: 8, nome: "CAMELO", emoji: "🐪", dezenas: ["29", "30", "31", "32"] },
+            { grupo: 9, nome: "COBRA", emoji: "🐍", dezenas: ["33", "34", "35", "36"] },
+            { grupo: 10, nome: "COEL nolHO", emoji: "🐰", dezenas: ["37", "38", "39", "40"] },
+            { grupo: 11, nome: "CAVALO", emoji: "🐎", dezenas: ["41", "42", "43", "44"] },
+            { grupo: 12, nome: "ELEFANTE", emoji: "🐘", dezenas: ["45", "46", "47", "48"] },
+            { grupo: 13, nome: "GALO", emoji: "🐓", dezenas: ["49", "50", "51", "52"] },
+            { grupo: 14, nome: "GATO", emoji: "🐱", dezenas: ["53", "54", "55", "56"] },
+            { grupo: 15, nome: "JACARÉ", emoji: "🐊", dezenas: ["57", "58", "59", "60"] },
+            { grupo: 16, nome: "LEÃO", emoji: "🦁", dezenas: ["61", "62", "63", "64"] },
+            { grupo: 17, nome: "MACACO", emoji: "🐒", dezenas: ["65", "66", "67", "68"] },
+            { grupo: 18, nome: "PORCO", emoji: "🐷", dezenas: ["69", "70", "71", "72"] },
+            { grupo: 19, nome: "PAVÃO", emoji: "🦚", dezenas: ["73", "74", "75", "76"] },
+            { grupo: 20, nome: "PERU", emoji: "🦃", dezenas: ["77", "78", "79", "80"] },
+            { grupo: 21, nome: "TOURO", emoji: "🐂", dezenas: ["81", "82", "83", "84"] },
+            { grupo: 22, nome: "TIGRE", emoji: "🐅", dezenas: ["85", "86", "87", "88"] },
+            { grupo: 23, nome: "URSO", emoji: "🐻", dezenas: ["89", "90", "91", "92"] },
+            { grupo: 24, nome: "VEADO", emoji: "🦌", dezenas: ["93", "94", "95", "96"] },
+            { grupo: 25, nome: "VACA", emoji: "🐄", dezenas: ["97", "98", "99", "00"] }
+        ];
+
+        function gerarPalpites() {
+            const palpites = [];
+            for (let i = 0; i < 12; i++) {
+                const numero = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+                const ultimosDois = numero.slice(-2);
+                const grupo = tabelaBichos.find(g => g.dezenas.includes(ultimosDois));
+                palpites.push({
+                    numero,
+                    grupo: grupo.grupo.toString().padStart(2, '0'),
+                    nome: grupo.nome,
+                    emoji: grupo.emoji
+                });
+            }
+
+            let palpitesHTML = '';
+            palpites.forEach(palpite => {
+                palpitesHTML += `
+                    <div class="palpite">
+                        ${palpite.numero} - ${palpite.nome} (GRUPO ${palpite.grupo})${palpite.emoji}
+                    </div>
+                `;
+            });
+
+            document.getElementById('palpitesContainer').innerHTML = palpitesHTML;
+        }
+    </script>
+</body>
+</html>
