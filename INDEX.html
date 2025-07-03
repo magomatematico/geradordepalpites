@@ -70,7 +70,7 @@
     </style>
 </head>
 <body>
-    <button class="gerar-palpites" onclick="gerarPalpites()">Gerar Palpites</button>
+    <button class="gerar-palpites">Gerar Palpites</button>
     <div id="palpitesContainer"></div>
 
     <script>
@@ -84,7 +84,7 @@
             { grupo: 7, nome: "CARNEIRO", emoji: "🐑", dezenas: ["25", "26", "27", "28"] },
             { grupo: 8, nome: "CAMELO", emoji: "🐪", dezenas: ["29", "30", "31", "32"] },
             { grupo: 9, nome: "COBRA", emoji: "🐍", dezenas: ["33", "34", "35", "36"] },
-            { grupo: 10, nome: "COEL nolHO", emoji: "🐰", dezenas: ["37", "38", "39", "40"] },
+            { grupo: 10, nome: "COELHO", emoji: "🐰", dezenas: ["37", "38", "39", "40"] },
             { grupo: 11, nome: "CAVALO", emoji: "🐎", dezenas: ["41", "42", "43", "44"] },
             { grupo: 12, nome: "ELEFANTE", emoji: "🐘", dezenas: ["45", "46", "47", "48"] },
             { grupo: 13, nome: "GALO", emoji: "🐓", dezenas: ["49", "50", "51", "52"] },
@@ -102,20 +102,35 @@
             { grupo: 25, nome: "VACA", emoji: "🐄", dezenas: ["97", "98", "99", "00"] }
         ];
 
-        function gerarPalpites() {
-            const palpites = [];
-            for (let i = 0; i < 12; i++) {
-                const numero = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-                const ultimosDois = numero.slice(-2);
-                const grupo = tabelaBichos.find(g => g.dezenas.includes(ultimosDois));
-                palpites.push({
-                    numero,
-                    grupo: grupo.grupo.toString().padStart(2, '0'),
-                    nome: grupo.nome,
-                    emoji: grupo.emoji
-                });
-            }
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.gerar-palpites').addEventListener('click', gerarPalpites);
+        });
 
+        function gerarPalpites() {
+            // Embaralhar a tabelaBichos e selecionar os primeiros 4 bichos
+            const bichosSelecionados = tabelaBichos
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 4);
+
+            const palpites = [];
+            // Gerar 3 palpites para cada bicho selecionado
+            bichosSelecionados.forEach(bicho => {
+                for (let i = 0; i < 3; i++) {
+                    // Escolher uma dezena aleatória do bicho
+                    const dezena = bicho.dezenas[Math.floor(Math.random() * bicho.dezenas.length)];
+                    // Gerar os dois primeiros dígitos aleatoriamente
+                    const primeirosDois = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+                    const numero = primeirosDois + dezena;
+                    palpites.push({
+                        numero,
+                        grupo: bicho.grupo.toString().padStart(2, '0'),
+                        nome: bicho.nome,
+                        emoji: bicho.emoji
+                    });
+                }
+            });
+
+            // Gerar HTML apenas com os palpites, sem cabeçalhos
             let palpitesHTML = '';
             palpites.forEach(palpite => {
                 palpitesHTML += `
